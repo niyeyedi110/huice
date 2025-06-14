@@ -1,0 +1,192 @@
+<!--pages/record/record.wxml-->
+<view class="container">
+  <!-- 照片上传区域 -->
+  <view class="photo-section card">
+    <view class="section-title">添加照片</view>
+    <view class="photo-grid">
+      <!-- 已选照片 -->
+      <view wx:for="{{photos}}" wx:key="*this" class="photo-item">
+        <image src="{{item}}" mode="aspectFill" bindtap="previewImage" data-index="{{index}}"></image>
+        <view class="delete-btn" bindtap="deleteImage" data-index="{{index}}">
+          <text class="delete-icon">✕</text>
+        </view>
+      </view>
+      <!-- 添加按钮 -->
+      <view wx:if="{{photos.length < maxPhotos}}" class="add-photo" bindtap="chooseImage">
+        <text class="add-icon">➕</text>
+        <text class="add-text">{{photos.length}}/{{maxPhotos}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 营养分析 -->
+  <view wx:if="{{photos.length > 0}}" class="nutrition-section card fade-in">
+    <view class="section-header">
+      <view class="section-title">
+        <text class="nutrition-icon">🔬</text>
+        <text>营养分析</text>
+      </view>
+      <view wx:if="{{!nutritionData && !analyzingNutrition}}" class="analyze-btn" bindtap="analyzeNutrition">
+        <text class="analyze-icon">✨</text>
+        <text>开始分析</text>
+      </view>
+    </view>
+    
+    <!-- 分析中 -->
+    <view wx:if="{{analyzingNutrition}}" class="analyzing">
+      <view class="loading-spinner"></view>
+      <text class="analyzing-text">AI正在分析食物营养成分...</text>
+    </view>
+    
+    <!-- 分析结果 -->
+    <view wx:if="{{nutritionData && !analyzingNutrition}}" class="nutrition-result slide-up">
+      <!-- 识别的食物 -->
+      <view class="foods-detected">
+        <text class="result-subtitle">识别到的食物</text>
+        <view class="food-tags">
+          <view wx:for="{{nutritionData.foods}}" wx:key="name" class="food-tag">
+            <text class="food-name">{{item.name}}</text>
+            <text class="food-portion">{{item.portion}}{{item.unit}}</text>
+            <text class="food-confidence">{{item.confidence}}%</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 营养成分 -->
+      <view class="nutrition-stats">
+        <text class="result-subtitle">营养成分总计</text>
+        <view class="nutrition-grid">
+          <view class="nutrition-item">
+            <text class="nutrition-value">{{nutritionData.totalNutrition.calories}}</text>
+            <text class="nutrition-label">卡路里</text>
+            <text class="nutrition-unit">kcal</text>
+          </view>
+          <view class="nutrition-item">
+            <text class="nutrition-value">{{nutritionData.totalNutrition.protein}}</text>
+            <text class="nutrition-label">蛋白质</text>
+            <text class="nutrition-unit">g</text>
+          </view>
+          <view class="nutrition-item">
+            <text class="nutrition-value">{{nutritionData.totalNutrition.fat}}</text>
+            <text class="nutrition-label">脂肪</text>
+            <text class="nutrition-unit">g</text>
+          </view>
+          <view class="nutrition-item">
+            <text class="nutrition-value">{{nutritionData.totalNutrition.carbs}}</text>
+            <text class="nutrition-label">碳水</text>
+            <text class="nutrition-unit">g</text>
+          </view>
+          <view class="nutrition-item">
+            <text class="nutrition-value">{{nutritionData.totalNutrition.fiber}}</text>
+            <text class="nutrition-label">纤维</text>
+            <text class="nutrition-unit">g</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 健康建议 -->
+      <view wx:if="{{nutritionData.suggestions.length > 0}}" class="health-suggestions">
+        <text class="result-subtitle">健康建议</text>
+        <view class="suggestion-list">
+          <view wx:for="{{nutritionData.suggestions}}" wx:key="index" 
+                class="suggestion-item {{item.type}}">
+            <text class="suggestion-icon">{{item.type === 'success' ? '✅' : item.type === 'warning' ? '⚠️' : 'ℹ️'}}</text>
+            <text class="suggestion-text">{{item.text}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 重新分析按钮 -->
+      <view class="reanalyze-btn" bindtap="analyzeNutrition">
+        <text>重新分析</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 餐次选择 -->
+  <view class="meal-section card">
+    <view class="section-title">选择餐次</view>
+    <view class="meal-options">
+      <view wx:for="{{mealTypes}}" wx:key="value" 
+            class="meal-option {{mealType === item.value ? 'active' : ''}}"
+            bindtap="selectMealType" data-value="{{item.value}}">
+        <text class="meal-icon">{{item.icon}}</text>
+        <text class="meal-label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 标签选择 -->
+  <view class="tag-section card">
+    <view class="section-title">添加标签</view>
+    <view class="tag-list">
+      <view wx:for="{{tags}}" wx:key="value" 
+            class="tag {{item.selected ? 'active' : ''}}"
+            bindtap="toggleTag" data-index="{{index}}">
+        {{item.value}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 满意度评分 -->
+  <view class="satisfaction-section card">
+    <view class="section-title">满意度</view>
+    <view class="satisfaction-options">
+      <view class="satisfaction-option {{satisfaction === 1 ? 'active' : ''}}" 
+            bindtap="selectSatisfaction" data-value="{{1}}">
+        <text>😞</text>
+        <text class="satisfaction-label">不满意</text>
+      </view>
+      <view class="satisfaction-option {{satisfaction === 3 ? 'active' : ''}}" 
+            bindtap="selectSatisfaction" data-value="{{3}}">
+        <text>😐</text>
+        <text class="satisfaction-label">一般</text>
+      </view>
+      <view class="satisfaction-option {{satisfaction === 5 ? 'active' : ''}}" 
+            bindtap="selectSatisfaction" data-value="{{5}}">
+        <text>😊</text>
+        <text class="satisfaction-label">很满意</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热量等级 -->
+  <view class="calorie-section card">
+    <view class="section-title">热量等级</view>
+    <view class="calorie-options">
+      <view wx:for="{{calorieLevels}}" wx:key="value"
+            class="calorie-option {{calorieLevel === item.value ? 'active' : ''}}"
+            style="border-color: {{calorieLevel === item.value ? item.color : '#e5e5e5'}}; color: {{calorieLevel === item.value ? item.color : '#666'}};"
+            bindtap="selectCalorieLevel" data-value="{{item.value}}">
+        {{item.label}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 备注信息 -->
+  <view class="info-section card">
+    <view class="info-item">
+      <view class="info-label">备注</view>
+      <textarea class="info-input textarea" 
+                placeholder="记录一下感受..." 
+                bindinput="inputDescription"
+                value="{{description}}"
+                maxlength="200"></textarea>
+    </view>
+    <view class="info-item" bindtap="getLocation">
+      <view class="info-label">地点</view>
+      <view class="info-value">
+        <text wx:if="{{location}}">{{location}}</text>
+        <text wx:else class="placeholder">点击选择地点</text>
+        <text class="arrow-icon">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-section">
+    <button class="save-btn" bindtap="saveRecord" disabled="{{uploading}}">
+      {{uploading ? '保存中...' : '保存记录'}}
+    </button>
+  </view>
+</view>

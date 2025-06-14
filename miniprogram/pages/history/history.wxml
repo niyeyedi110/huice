@@ -1,0 +1,96 @@
+<!--pages/history/history.wxml-->
+<view class="container">
+  <!-- 头部切换 -->
+  <view class="header">
+    <view class="view-switcher">
+      <view class="switch-btn {{viewMode === 'calendar' ? 'active' : ''}}" bindtap="switchViewMode">
+        <image src="/images/calendar.png" class="switch-icon"></image>
+        <text>日历</text>
+      </view>
+      <view class="switch-btn {{viewMode === 'gallery' ? 'active' : ''}}" bindtap="switchViewMode">
+        <image src="/images/gallery.png" class="switch-icon"></image>
+        <text>照片墙</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 日历视图 -->
+  <view wx:if="{{viewMode === 'calendar'}}" class="calendar-view">
+    <!-- 月份选择器 -->
+    <picker mode="date" fields="month" value="{{currentDate}}" bindchange="onMonthChange">
+      <view class="month-selector">
+        <text>{{currentDate}}</text>
+        <image src="/images/arrow-down.png" class="arrow-icon"></image>
+      </view>
+    </picker>
+
+    <!-- 简易日历 -->
+    <view class="calendar-grid">
+      <view class="weekdays">
+        <text wx:for="{{['日', '一', '二', '三', '四', '五', '六']}}" wx:key="*this" class="weekday">{{item}}</text>
+      </view>
+      
+      <!-- 这里简化处理，实际应该生成完整的日历 -->
+      <view class="days">
+        <view wx:for="{{31}}" wx:key="*this" class="day {{monthRecords[currentDate + '-' + (item < 10 ? '0' + item : item)] ? 'has-record' : ''}}"
+              bindtap="selectDate" data-date="{{currentDate + '-' + (item < 10 ? '0' + item : item)}}">
+          <text>{{item}}</text>
+          <view wx:if="{{monthRecords[currentDate + '-' + (item < 10 ? '0' + item : item)]}}" class="dot"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 选中日期的记录 -->
+    <view class="selected-date-records">
+      <view class="date-header">
+        <text>{{selectedDate}} 的记录</text>
+      </view>
+      
+      <view wx:if="{{loading}}" class="loading">
+        <text>加载中...</text>
+      </view>
+      
+      <view wx:elif="{{records.length === 0}}" class="empty-state">
+        <image src="/images/empty.png" class="empty-image"></image>
+        <text class="empty-text">这一天还没有记录</text>
+      </view>
+      
+      <view wx:else class="records-list">
+        <view wx:for="{{records}}" wx:key="_id" class="record-item card">
+          <view class="record-time">{{item.createTime}}</view>
+          <view class="record-photos">
+            <image wx:for="{{item.photos}}" wx:for-item="photo" wx:key="*this" 
+                   src="{{photo}}" mode="aspectFill" class="record-photo"></image>
+          </view>
+          <view wx:if="{{item.tags && item.tags.length > 0}}" class="record-tags">
+            <text wx:for="{{item.tags}}" wx:key="*this" class="tag">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 照片墙视图 -->
+  <view wx:else class="gallery-view">
+    <view class="gallery-grid">
+      <view wx:for="{{galleryPhotos}}" wx:key="index" class="gallery-item" 
+            bindtap="viewPhoto" data-photo="{{item}}">
+        <image src="{{item.url}}" mode="aspectFill" lazy-load></image>
+        <view class="photo-date">{{item.record.date}}</view>
+      </view>
+    </view>
+    
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+    
+    <view wx:if="{{!hasMore && galleryPhotos.length > 0}}" class="no-more">
+      <text>已加载全部照片</text>
+    </view>
+    
+    <view wx:if="{{galleryPhotos.length === 0 && !loading}}" class="empty-state">
+      <image src="/images/empty.png" class="empty-image"></image>
+      <text class="empty-text">还没有照片记录</text>
+    </view>
+  </view>
+</view>

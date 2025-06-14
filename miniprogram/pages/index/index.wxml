@@ -1,0 +1,122 @@
+<!--pages/index/index.wxml-->
+<view class="container fade-in">
+  <!-- 顶部日期 -->
+  <view class="header">
+    <view class="date-section">
+      <text class="date-weekday">{{weekday}}</text>
+      <text class="date-text">{{todayDate}}</text>
+    </view>
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-number">{{todayRecords.length}}</text>
+        <text class="stat-label">今日餐数</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{todayPhotos}}</text>
+        <text class="stat-label">今日照片</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 拍照按钮区域 -->
+  <view class="camera-section">
+    <view class="camera-button slide-up" bindtap="quickCamera">
+      <view class="camera-icon">📷</view>
+      <text class="camera-text">拍照记录</text>
+      <view class="camera-hint">快速记录这一餐</view>
+    </view>
+    <view class="sub-actions">
+      <view class="sub-action" bindtap="goToCamera">
+        <text class="sub-icon">🖼️</text>
+        <text class="sub-text">相册选择</text>
+      </view>
+      <view class="sub-action" bindtap="quickNote">
+        <text class="sub-icon">✏️</text>
+        <text class="sub-text">快速备注</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日记录 -->
+  <view class="records-section">
+    <view class="section-title">
+      <text>今日饮食</text>
+    </view>
+
+    <!-- 加载中 -->
+    <view wx:if="{{loading}}" class="loading">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:elif="{{showEmpty}}" class="empty-state">
+      <text class="empty-icon">🍽️</text>
+      <text class="empty-title">今天还没有记录</text>
+      <text class="empty-text">记录你的每一餐，养成健康饮食习惯</text>
+      <view class="btn btn-primary mt-40" bindtap="quickCamera">
+        <text>开始记录</text>
+      </view>
+    </view>
+
+    <!-- 记录列表 -->
+    <view wx:else class="records-list">
+      <view wx:for="{{todayRecords}}" wx:key="_id" class="record-item card fade-in" style="animation-delay: {{index * 0.1}}s">
+        <view class="record-header">
+          <view class="meal-type">
+            <view class="meal-badge {{item.mealType}}">
+              <text class="meal-icon">{{mealIcons[item.mealType]}}</text>
+              <text class="meal-label">{{mealTypes[item.mealType]}}</text>
+            </view>
+            <text class="meal-time">{{item.createTime}}</text>
+          </view>
+          <text class="more-icon" bindtap="showActions" data-id="{{item._id}}">⋮</text>
+        </view>
+        
+        <view class="record-photos {{item.photos.length === 1 ? 'single-photo' : ''}} {{item.photos.length === 2 ? 'double-photo' : ''}}" bindtap="viewRecord" data-record="{{item}}">
+          <image wx:for="{{item.photos}}" wx:for-item="photo" wx:key="*this" 
+                 src="{{photo}}" class="record-photo" mode="aspectFill"></image>
+        </view>
+
+        <view wx:if="{{item.tags && item.tags.length > 0}}" class="record-tags">
+          <text wx:for="{{item.tags}}" wx:key="*this" class="tag">{{item}}</text>
+        </view>
+
+        <view wx:if="{{item.description}}" class="record-desc">
+          <text>{{item.description}}</text>
+        </view>
+        
+        <!-- 营养信息 -->
+        <view wx:if="{{item.nutrition}}" class="nutrition-summary">
+          <text class="nutrition-title">🔬 营养成分</text>
+          <view class="nutrition-badges">
+            <view class="nutrition-badge calories">
+              <text class="badge-value">{{item.nutrition.totalNutrition.calories}}</text>
+              <text class="badge-label">千卡</text>
+            </view>
+            <view class="nutrition-badge protein">
+              <text class="badge-value">{{item.nutrition.totalNutrition.protein}}</text>
+              <text class="badge-label">g蛋白质</text>
+            </view>
+            <view class="nutrition-badge carbs">
+              <text class="badge-value">{{item.nutrition.totalNutrition.carbs}}</text>
+              <text class="badge-label">g碳水</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="record-footer">
+          <view class="satisfaction">
+            <text class="emoji-icon">{{satisfactionEmojis[item.satisfaction - 1]}}</text>
+            <text class="satisfaction-text">{{satisfactionTexts[item.satisfaction - 1]}}</text>
+          </view>
+          <view wx:if="{{item.location}}" class="location">
+            <text class="location-icon">📍</text>
+            <text>{{item.location}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

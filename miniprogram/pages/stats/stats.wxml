@@ -1,0 +1,120 @@
+<!--pages/stats/stats.wxml-->
+<view class="container">
+  <!-- 时间范围选择 -->
+  <view class="time-range-selector">
+    <view wx:for="{{timeRanges}}" wx:key="value" 
+          class="range-btn {{timeRange === item.value ? 'active' : ''}}"
+          bindtap="selectTimeRange" data-value="{{item.value}}">
+      {{item.label}}
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>统计数据加载中...</text>
+  </view>
+
+  <!-- 统计内容 -->
+  <view wx:else class="stats-content">
+    <!-- 基础统计 -->
+    <view class="stats-card card">
+      <view class="card-title">记录概览</view>
+      <view class="stats-grid">
+        <view class="stat-item">
+          <text class="stat-value">{{stats.totalDays}}</text>
+          <text class="stat-label">记录天数</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.totalRecords}}</text>
+          <text class="stat-label">总记录数</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.continuousDays}}</text>
+          <text class="stat-label">连续天数</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.completionRate}}%</text>
+          <text class="stat-label">完成率</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 餐次分布 -->
+    <view class="stats-card card">
+      <view class="card-title">餐次分布</view>
+      <view class="meal-distribution">
+        <view class="meal-item">
+          <view class="meal-icon">🌅</view>
+          <text class="meal-name">早餐</text>
+          <text class="meal-count">{{stats.mealDistribution.breakfast}}次</text>
+          <view class="meal-bar" style="width: {{stats.mealDistribution.breakfast / stats.totalRecords * 100}}%"></view>
+        </view>
+        <view class="meal-item">
+          <view class="meal-icon">☀️</view>
+          <text class="meal-name">午餐</text>
+          <text class="meal-count">{{stats.mealDistribution.lunch}}次</text>
+          <view class="meal-bar" style="width: {{stats.mealDistribution.lunch / stats.totalRecords * 100}}%"></view>
+        </view>
+        <view class="meal-item">
+          <view class="meal-icon">🌙</view>
+          <text class="meal-name">晚餐</text>
+          <text class="meal-count">{{stats.mealDistribution.dinner}}次</text>
+          <view class="meal-bar" style="width: {{stats.mealDistribution.dinner / stats.totalRecords * 100}}%"></view>
+        </view>
+        <view class="meal-item">
+          <view class="meal-icon">🍿</view>
+          <text class="meal-name">加餐</text>
+          <text class="meal-count">{{stats.mealDistribution.snack}}次</text>
+          <view class="meal-bar" style="width: {{stats.mealDistribution.snack / stats.totalRecords * 100}}%"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 热量分布 -->
+    <view class="stats-card card">
+      <view class="card-title">热量分布</view>
+      <view class="calorie-distribution">
+        <view class="calorie-item">
+          <view class="calorie-circle" style="background-color: #4CAF50;">
+            <text class="calorie-percent">{{stats.calorieDistribution.low}}%</text>
+          </view>
+          <text class="calorie-label">低热量</text>
+        </view>
+        <view class="calorie-item">
+          <view class="calorie-circle" style="background-color: #FF9800;">
+            <text class="calorie-percent">{{stats.calorieDistribution.medium}}%</text>
+          </view>
+          <text class="calorie-label">中热量</text>
+        </view>
+        <view class="calorie-item">
+          <view class="calorie-circle" style="background-color: #F44336;">
+            <text class="calorie-percent">{{stats.calorieDistribution.high}}%</text>
+          </view>
+          <text class="calorie-label">高热量</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 常用标签 -->
+    <view class="stats-card card">
+      <view class="card-title">常用标签</view>
+      <view class="tags-cloud">
+        <view wx:for="{{stats.mostUsedTags}}" wx:key="name" 
+              class="tag-item" bindtap="viewTagDetail" data-tag="{{item}}"
+              style="font-size: {{24 + item.count * 2}}rpx;">
+          {{item.name}}
+        </view>
+      </view>
+      <view wx:if="{{stats.mostUsedTags.length === 0}}" class="empty-tags">
+        <text>暂无标签数据</text>
+      </view>
+    </view>
+
+    <!-- 生成报告按钮 -->
+    <view class="report-section">
+      <button class="report-btn" bindtap="generateReport">
+        生成饮食报告
+      </button>
+    </view>
+  </view>
+</view>

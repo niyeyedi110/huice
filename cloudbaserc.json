@@ -1,0 +1,48 @@
+{
+  "envId": "your-env-id",
+  "version": "2.0",
+  "$schema": "https://framework-1258016615.tcloudbaseapp.com/schema/latest.json",
+  "functionRoot": "./cloudfunctions",
+  "functions": [
+    {
+      "name": "quickUpload",
+      "timeout": 5,
+      "runtime": "Nodejs16.13",
+      "memorySize": 128,
+      "handler": "index.main"
+    },
+    {
+      "name": "addPhotoRecord",
+      "timeout": 5,
+      "runtime": "Nodejs16.13",
+      "memorySize": 128,
+      "handler": "index.main"
+    },
+    {
+      "name": "getPhotoRecords",
+      "timeout": 5,
+      "runtime": "Nodejs16.13",
+      "memorySize": 128,
+      "handler": "index.main"
+    },
+    {
+      "name": "getStatistics",
+      "timeout": 5,
+      "runtime": "Nodejs16.13",
+      "memorySize": 128,
+      "handler": "index.main"
+    }
+  ],
+  "framework": {
+    "name": "photo-diet-miniprogram",
+    "plugins": {
+      "client": {
+        "use": "@cloudbase/framework-plugin-website",
+        "inputs": {
+          "outputPath": "./miniprogram",
+          "cloudPath": "/miniprogram"
+        }
+      }
+    }
+  }
+}

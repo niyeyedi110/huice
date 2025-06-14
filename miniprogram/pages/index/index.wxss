@@ -1,0 +1,420 @@
+/* pages/index/index.wxss */
+.container {
+  padding-bottom: 120rpx;
+  background-color: var(--background);
+  min-height: 100vh;
+}
+
+/* 顶部日期 */
+.header {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  padding: 60rpx 40rpx 40rpx;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+  opacity: 0.1;
+  animation: float 20s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(30rpx, -30rpx) rotate(120deg); }
+  66% { transform: translate(-20rpx, 20rpx) rotate(240deg); }
+}
+
+.date-section {
+  margin-bottom: 32rpx;
+}
+
+.date-weekday {
+  display: block;
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  margin-bottom: 8rpx;
+}
+
+.date-text {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  font-size: 44rpx;
+  font-weight: 600;
+  color: var(--primary-color);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  margin-top: 8rpx;
+}
+
+.stat-divider {
+  width: 2rpx;
+  height: 40rpx;
+  background-color: var(--border-color);
+}
+
+/* 拍照按钮区域 */
+.camera-section {
+  padding: 60rpx 40rpx 40rpx;
+  text-align: center;
+}
+
+.camera-button {
+  width: 280rpx;
+  height: 280rpx;
+  margin: 0 auto;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12rpx 40rpx rgba(255, 107, 107, 0.35);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.camera-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  transform: rotate(45deg);
+  transition: all 0.6s;
+}
+
+.camera-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.4);
+}
+
+.camera-button:active::before {
+  top: -20%;
+  left: -20%;
+}
+
+.camera-icon {
+  font-size: 80rpx;
+  margin-bottom: 16rpx;
+  filter: drop-shadow(0 2rpx 4rpx rgba(0, 0, 0, 0.1));
+}
+
+.camera-text {
+  color: #fff;
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.camera-hint {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 24rpx;
+}
+
+.sub-actions {
+  margin-top: 48rpx;
+  display: flex;
+  justify-content: center;
+  gap: 32rpx;
+}
+
+.sub-action {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 36rpx;
+  background-color: var(--card-background);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sub-action:active {
+  transform: scale(0.95);
+  box-shadow: none;
+}
+
+.sub-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.sub-text {
+  font-size: 28rpx;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* 记录区域 */
+.records-section {
+  padding: 0 32rpx 32rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 32rpx;
+  display: flex;
+  align-items: center;
+}
+
+.section-title::before {
+  content: '';
+  width: 6rpx;
+  height: 32rpx;
+  background-color: var(--primary-color);
+  border-radius: 3rpx;
+  margin-right: 16rpx;
+}
+
+/* 记录列表 */
+.records-list {
+  padding-bottom: 32rpx;
+}
+
+.record-item {
+  margin-bottom: 32rpx;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.record-item:active {
+  transform: scale(0.98);
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.meal-type {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.meal-badge {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 20rpx;
+  border-radius: var(--radius-full);
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.meal-badge.breakfast {
+  background-color: #FFF3E0;
+  color: #F57C00;
+}
+
+.meal-badge.lunch {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+}
+
+.meal-badge.dinner {
+  background-color: #E3F2FD;
+  color: #1565C0;
+}
+
+.meal-badge.snack {
+  background-color: #FCE4EC;
+  color: #C2185B;
+}
+
+.meal-icon {
+  font-size: 24rpx;
+  margin-right: 8rpx;
+}
+
+.meal-label {
+  font-size: 26rpx;
+}
+
+.meal-time {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.more-icon {
+  font-size: 40rpx;
+  color: var(--text-secondary);
+  padding: 8rpx;
+  cursor: pointer;
+}
+
+.record-photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.record-photo {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+}
+
+/* 单张照片 */
+.record-photos.single-photo {
+  grid-template-columns: 1fr;
+}
+
+/* 两张照片 */
+.record-photos.double-photo {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.record-tags {
+  margin-top: 20rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.record-desc {
+  margin-top: 20rpx;
+  font-size: 30rpx;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.record-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid var(--border-color);
+}
+
+.satisfaction {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.emoji-icon {
+  font-size: 36rpx;
+}
+
+.satisfaction-text {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  gap: 6rpx;
+}
+
+.location-icon {
+  font-size: 24rpx;
+}
+
+/* 加载状态 */
+.loading-text {
+  margin-top: 16rpx;
+  font-size: 28rpx;
+  color: var(--text-secondary);
+}
+
+/* 营养信息摘要 */
+.nutrition-summary {
+  margin-top: 20rpx;
+  padding: 20rpx;
+  background-color: var(--background);
+  border-radius: var(--radius-md);
+}
+
+.nutrition-title {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.nutrition-badges {
+  display: flex;
+  gap: 16rpx;
+}
+
+.nutrition-badge {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx;
+  border-radius: var(--radius-md);
+  background-color: white;
+  border: 1rpx solid var(--border-color);
+}
+
+.nutrition-badge.calories {
+  border-color: #FFE5E5;
+  background-color: #FFF5F5;
+}
+
+.nutrition-badge.protein {
+  border-color: #E5F2FF;
+  background-color: #F5FAFF;
+}
+
+.nutrition-badge.carbs {
+  border-color: #FFF3E0;
+  background-color: #FFFAF0;
+}
+
+.badge-value {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--primary-color);
+  line-height: 1;
+}
+
+.badge-label {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  margin-top: 8rpx;
+}
