@@ -259,7 +259,10 @@ Page({
       return wx.cloud.callFunction({
         name: 'analyzeNutrition',
         data: {
-          fileID: res.fileID
+          fileID: res.fileID,
+          tags: this.data.tags.filter(t => t.selected).map(t => t.value),
+          description: this.data.description,
+          mealType: this.data.selectedMealType
         }
       });
     }).then(res => {
